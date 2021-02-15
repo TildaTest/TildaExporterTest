@@ -10,42 +10,59 @@ namespace TildaExporter
 {
     class Program
     {
-        static string baseUrl = "http://api.tildacdn.info";
+        static readonly string tildaBaseUrl = "http://api.tildacdn.info";
         static readonly string publicKey = "olslwsjnhote1szo4r3o";
         static readonly string secretKey = "k7a91yy3lpo1g03ts1gq";
         static readonly string projectid = "1267295";
 
-        static readonly string projectFolderFullPath = "D:\\Work\\TildaFreshcode1\\";
+        static readonly string projectFolderFullPath = "D:\\Work\\TildaFreshcode\\";
         static readonly string imagesFolder = "images";
         static readonly string jsFolder = "js";
         static readonly string cssFolder = "css";
 
-        static List<PageShort> pagesList = null;
-        static TildaProject project = null;
-
-
         static void Main(string[] args)
         {
-            CreateFolders();
+            Console.WriteLine("Press Enter to start exporting site!");
+            Console.ReadLine();
+            ExportSite();
+        }
 
-            Console.WriteLine("Base project information...");
-            project = GetProjectExport();
+        static string GetUrl(string methodName)
+        {
+            return tildaBaseUrl + "/v1/" + methodName + "/?publickey=" + publicKey + "&secretkey=" + secretKey + "&projectid=" + projectid;
+        }
+
+        static void ExportSite()
+        {
+            CreateFolders();
+            Console.WriteLine("Folders was created...");
+
+            Console.WriteLine("Getting base project information...");
+
+            TildaProject project = GetProjectExport();
+            List<PageShort> pagesList = GetPagesListRequest();
+
+            CreateHtaccess(project.Htaccess);
 
             Console.WriteLine();
-            Console.WriteLine("Printing all pages...");
+            Console.WriteLine("Start saving pages...");
 
-            pagesList = GetPagesListRequest();
+            DownloadAndSafeAllPages(pagesList);
 
-            DownloadAndSafeAllPages();
+            Console.WriteLine();
+            Console.WriteLine("Start saving css files...");
+            var cssFilesCount = DownloadAndSafeFiles(project.CssFiles, cssFolder);
+            Console.WriteLine("Css files was saved! Total count: " + cssFilesCount);
 
-            DownloadAndSafeFiles(project.CssFiles, cssFolder);
-            Console.WriteLine("Css files was saved!");
+            Console.WriteLine();
+            Console.WriteLine("Start saving js files...");
+            var jsFilesCount = DownloadAndSafeFiles(project.JsFiles, jsFolder);
+            Console.WriteLine("Js files was saved!! Total count: " + jsFilesCount);
 
-            DownloadAndSafeFiles(project.JsFiles, jsFolder);
-            Console.WriteLine("Js files was saved!");
-
-            DownloadAndSafeFiles(project.Images, imagesFolder);
-            Console.WriteLine("Images was saved!");
+            Console.WriteLine();
+            Console.WriteLine("Start saving base images...");
+            var baseImagesCount = DownloadAndSafeFiles(project.Images, imagesFolder);
+            Console.WriteLine("Base images was saved!! Total count: " + baseImagesCount);
 
             // Wait for closing programm by user
             Console.WriteLine();
@@ -53,9 +70,10 @@ namespace TildaExporter
             Console.ReadLine();
         }
 
-        static string GetUrl(string methodName)
+        static void CreateHtaccess(string htaccessData)
         {
-            return baseUrl + "/v1/" + methodName + "/?publickey=" + publicKey + "&secretkey=" + secretKey + "&projectid=" + projectid;
+            File.WriteAllText(projectFolderFullPath + ".htaccess", htaccessData);
+            Console.WriteLine("Htaccess was created...");
         }
 
         static void CreateFolders()
@@ -66,33 +84,26 @@ namespace TildaExporter
             Directory.CreateDirectory(projectFolderFullPath + cssFolder);
 
             Console.WriteLine("Folders created!");
-            Console.WriteLine();
         }
 
         static TildaProject GetProjectExport()
         {
             string url = GetUrl("getprojectexport");
 
-            //Create a query
             HttpClient client = new HttpClient();
             var result = client.GetAsync(url).Result;
 
-
             using (StreamReader sr = new StreamReader(result.Content.ReadAsStreamAsync().Result))
             {
-                Console.WriteLine();
                 var jsonText = sr.ReadToEnd();
-
-                Console.WriteLine(jsonText);
 
                 var response = JsonConvert.DeserializeObject<TildaResult<TildaProject>>(jsonText);
 
-                Console.WriteLine("page id: " + response.result.Id);
+                Console.WriteLine("Project id: " + response.result.Id);
                 Console.WriteLine("With CustomDomain: " + response.result.Customdomain);
 
                 return response.result;
             }
-
         }
 
         static List<PageShort> GetPagesListRequest()
@@ -118,7 +129,7 @@ namespace TildaExporter
             }
         }
 
-        static void DownloadAndSafeAllPages()
+        static void DownloadAndSafeAllPages(List<PageShort> pagesList)
         {
             string url = GetUrl("getpagefullexport");
 
@@ -138,13 +149,10 @@ namespace TildaExporter
                     {
                         File.WriteAllText(projectFolderFullPath + response.result.Filename, response.result.Html);
 
-                        Console.WriteLine(response.result.Images);
+                        TildaOptimizer.OptimizePage(response.result.Html);
 
-                        try
-                        {
-                            DownloadAndSafeFiles(response.result.Images, imagesFolder);
-                        }
-                        catch (Exception ex) { }
+
+                        DownloadAndSafeFiles(response.result.Images, imagesFolder);
 
                         Console.WriteLine("file with id: " + response.result.Id + " was successfuly saved");
                     }
@@ -158,18 +166,25 @@ namespace TildaExporter
             int savedFilesCount = 0;
             foreach (var file in filesToSave)
             {
-                HttpClient client = new HttpClient();
-                var result = client.GetAsync(file.From).Result;
-
-                using (StreamReader sr = new StreamReader(result.Content.ReadAsStreamAsync().Result))
+                try
                 {
-                    Console.WriteLine();
-                    var text = sr.ReadToEnd();
+                    HttpClient client = new HttpClient();
+                    var result = client.GetAsync(file.From).Result;
 
-                    File.WriteAllText(projectFolderFullPath + folderToSave + "\\" + file.To, text);
+                    using (StreamReader sr = new StreamReader(result.Content.ReadAsStreamAsync().Result))
+                    {
+                        Console.WriteLine();
+                        var text = sr.ReadToEnd();
 
-                    Console.WriteLine("file with name: " + file.To + " was successfuly saved");
-                    savedFilesCount++;
+                        File.WriteAllText(projectFolderFullPath + folderToSave + "\\" + file.To, text);
+
+                        Console.WriteLine("file with name: " + file.To + " was successfuly saved");
+                        savedFilesCount++;
+                    }
+                }
+                catch (Exception ex) 
+                {
+                    Console.Error.Write("Saving file error! Message: " + ex.Message);
                 }
             }
             return savedFilesCount;
