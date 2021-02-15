@@ -1,0 +1,15 @@
+C:\Users\romat\source\repos\TildaExporter\TildaExporter\obj\Debug\netcoreapp3.1\TildaExporter.csprojAssemblyReference.cache
+C:\Users\romat\source\repos\TildaExporter\TildaExporter\obj\Debug\netcoreapp3.1\TildaExporter.AssemblyInfoInputs.cache
+C:\Users\romat\source\repos\TildaExporter\TildaExporter\obj\Debug\netcoreapp3.1\TildaExporter.AssemblyInfo.cs
+C:\Users\romat\source\repos\TildaExporter\TildaExporter\bin\Debug\netcoreapp3.1\TildaExporter.exe
+C:\Users\romat\source\repos\TildaExporter\TildaExporter\bin\Debug\netcoreapp3.1\TildaExporter.deps.json
+C:\Users\romat\source\repos\TildaExporter\TildaExporter\bin\Debug\netcoreapp3.1\TildaExporter.runtimeconfig.json
+C:\Users\romat\source\repos\TildaExporter\TildaExporter\bin\Debug\netcoreapp3.1\TildaExporter.runtimeconfig.dev.json
+C:\Users\romat\source\repos\TildaExporter\TildaExporter\bin\Debug\netcoreapp3.1\TildaExporter.dll
+C:\Users\romat\source\repos\TildaExporter\TildaExporter\bin\Debug\netcoreapp3.1\TildaExporter.pdb
+C:\Users\romat\source\repos\TildaExporter\TildaExporter\obj\Debug\netcoreapp3.1\TildaExporter.dll
+C:\Users\romat\source\repos\TildaExporter\TildaExporter\obj\Debug\netcoreapp3.1\TildaExporter.pdb
+C:\Users\romat\source\repos\TildaExporter\TildaExporter\obj\Debug\netcoreapp3.1\TildaExporter.genruntimeconfig.cache
+C:\Users\romat\source\repos\TildaExporter\TildaExporter\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
+C:\Users\romat\source\repos\TildaExporter\TildaExporter\obj\Debug\netcoreapp3.1\TildaExporter.csproj.CoreCompileInputs.cache
+C:\Users\romat\source\repos\TildaExporter\TildaExporter\obj\Debug\netcoreapp3.1\TildaExporter.csproj.CopyComplete

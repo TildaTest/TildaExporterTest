@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "7zFgG6qCci3khnvZtkUPw73jauILlRBqOPeY7RUX/ACuxarmY0+3CSkZ1HHRpYFG0dbZPvigRlYnmFG8MnwDdA==",
+  "success": true,
+  "projectFilePath": "D:\\Work\\TildaExporter\\TildaExporter\\TildaExporter.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\romat\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}
