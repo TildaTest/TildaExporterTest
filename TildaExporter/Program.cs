@@ -16,9 +16,9 @@ namespace TildaExporter
         static readonly string projectid = "1267295";
 
         static readonly string projectFolderFullPath = "D:\\Work\\TildaFreshcode\\";
-        static readonly string imagesFolder = "images";
-        static readonly string jsFolder = "js";
-        static readonly string cssFolder = "css";
+        static readonly string imagesFolderName = "images";
+        static readonly string jsFolderName = "js";
+        static readonly string cssFolderName = "css";
 
         static void Main(string[] args)
         {
@@ -51,17 +51,17 @@ namespace TildaExporter
 
             Console.WriteLine();
             Console.WriteLine("Start saving css files...");
-            var cssFilesCount = DownloadAndSafeFiles(project.CssFiles, cssFolder);
+            var cssFilesCount = DownloadAndSafeFiles(project.CssFiles, cssFolderName);
             Console.WriteLine("Css files was saved! Total count: " + cssFilesCount);
 
             Console.WriteLine();
             Console.WriteLine("Start saving js files...");
-            var jsFilesCount = DownloadAndSafeFiles(project.JsFiles, jsFolder);
+            var jsFilesCount = DownloadAndSafeFiles(project.JsFiles, jsFolderName);
             Console.WriteLine("Js files was saved!! Total count: " + jsFilesCount);
 
             Console.WriteLine();
             Console.WriteLine("Start saving base images...");
-            var baseImagesCount = DownloadAndSafeFiles(project.Images, imagesFolder);
+            var baseImagesCount = DownloadAndSafeFiles(project.Images, imagesFolderName);
             Console.WriteLine("Base images was saved!! Total count: " + baseImagesCount);
 
             // Wait for closing programm by user
@@ -79,9 +79,9 @@ namespace TildaExporter
         static void CreateFolders()
         {
             Directory.CreateDirectory(projectFolderFullPath);
-            Directory.CreateDirectory(projectFolderFullPath + imagesFolder);
-            Directory.CreateDirectory(projectFolderFullPath + jsFolder);
-            Directory.CreateDirectory(projectFolderFullPath + cssFolder);
+            Directory.CreateDirectory(projectFolderFullPath + imagesFolderName);
+            Directory.CreateDirectory(projectFolderFullPath + jsFolderName);
+            Directory.CreateDirectory(projectFolderFullPath + cssFolderName);
 
             Console.WriteLine("Folders created!");
         }
@@ -149,10 +149,10 @@ namespace TildaExporter
                     {
                         File.WriteAllText(projectFolderFullPath + response.result.Filename, response.result.Html);
 
-                        TildaOptimizer.OptimizePage(response.result.Html);
+                        TildaOptimizer.OptimizePage(response.result.Html, projectFolderFullPath + imagesFolderName);
 
 
-                        DownloadAndSafeFiles(response.result.Images, imagesFolder);
+                        DownloadAndSafeFiles(response.result.Images, imagesFolderName);
 
                         Console.WriteLine("file with id: " + response.result.Id + " was successfuly saved");
                     }
